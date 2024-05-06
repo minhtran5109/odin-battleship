@@ -1,7 +1,25 @@
-let Ship = function (length) {
+let Ship = function (length, orientation, startR, startC) {
   this.length = length;
+  this.orientation = orientation;
+  this.startRow = startR;
+  this.startCol = startC;
+  this.coordinates = this.getCoordinates();
   this.nHits = 0;
   this.sunk = false;
+};
+
+Ship.prototype.getCoordinates = function () {
+  const coords = [];
+  if (this.orientation === "H") {
+    for (let i = 0; i < this.length; i++) {
+      coords.push({ row: this.startRow, col: this.startCol + i });
+    }
+  } else if (this.orientation === "V") {
+    for (let i = 0; i < this.length; i++) {
+      coords.push({ row: this.startRow + i, col: this.startCol });
+    }
+  }
+  return coords;
 };
 
 Ship.prototype.hit = function () {
@@ -46,6 +64,7 @@ Board.prototype.receiveAttack = function (r, c) {};
 // };
 
 // TODO:
+// actually write tests first before all of these (you are doing TDD!)
 // expand ship to include spanning coordinates, orientation
 // adjust hit for different coords?
 // then test

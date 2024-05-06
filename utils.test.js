@@ -9,13 +9,25 @@ const cols = 6;
 
 describe("Testing ship interface", () => {
   beforeEach(() => {
-    ship1 = new Ship(1);
-    ship2 = new Ship(2);
+    ship1 = new Ship(1, "V", 1, 1);
+    ship2 = new Ship(2, "H", 2, 2);
   });
   test("correct ships length", () => {
     expect(ship1.length).toBe(1);
     expect(ship2.length).toBe(2);
   });
+  test("ship having correct coordinates", () => {
+    // ship 1 is only of length 1 so it should not span any additional coordinates
+    expect(ship1.coordinates[0]).toEqual({ row: 1, col: 1 });
+    expect(ship1.coordinates[1]).toBeUndefined();
+
+    // ship 2 is placed horizontally, and span 2 coords
+    expect(ship2.coordinates.length).toBe(2);
+    expect(ship2.coordinates[0]).toEqual({ row: 2, col: 2 });
+    expect(ship2.coordinates[1]).toEqual({ row: 2, col: 3 });
+    expect(ship1.coordinates[2]).toBeUndefined();
+  });
+
   describe("ships getting hit", () => {
     beforeEach(() => {
       ship1.hit();
@@ -46,7 +58,7 @@ describe("Testing ship interface", () => {
 describe("Testing gameboard", () => {
   gameBoard = new Board(rows, cols);
   test("board initialisation", () => {
-    console.log(gameBoard.board[0][0]);
+    // console.log(gameBoard.board[0][0]);
     expect(gameBoard.board[0][0]).toBe("E");
   });
 });

@@ -41,6 +41,8 @@ let Board = function (rows, cols) {
   this.rows = rows;
   this.cols = cols;
   this.board = this.initialiseBoard();
+  this.ships = [];
+  this.missedShot = [];
 };
 
 Board.prototype.initialiseBoard = function () {
@@ -54,7 +56,13 @@ Board.prototype.initialiseBoard = function () {
   return board;
 };
 
-Board.prototype.placeShip = function (ship) {};
+Board.prototype.placeShip = function (ship) {
+  this.ships.push(ship);
+  ship.coordinates.forEach((coord) => {
+    this.board[coord.row][coord.col] = SHIP;
+  });
+};
+
 Board.prototype.receiveAttack = function (r, c) {};
 
 // Board.prototype.printBoard = function () {

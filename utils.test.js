@@ -76,10 +76,58 @@ describe("Testing gameboard", () => {
       }
     }
   });
-  test("placing ships", () => {
-    gameBoard.placeShip(ship2);
-    expect(gameBoard.ships).toContain(ship2);
-    expect(gameBoard.board[2][2]).toEqual("S");
-    expect(gameBoard.board[2][3]).toEqual("S");
+
+  describe("board behaviors with ships", () => {
+    beforeAll(() => {
+      gameBoard = new Board(rows, cols);
+      gameBoard.placeShip(ship1);
+      gameBoard.placeShip(ship2);
+    });
+    test("placing ships", () => {
+      // gameBoard.placeShip(ship1);
+      // gameBoard.placeShip(ship2);
+      expect(gameBoard.ships).toContainEqual(ship1);
+      expect(gameBoard.ships).toContainEqual(ship2);
+      expect(gameBoard.board[1][1]).toEqual("S");
+      expect(gameBoard.board[2][2]).toEqual("S");
+      expect(gameBoard.board[2][3]).toEqual("S");
+    });
+
+    test("receiving attacks", () => {
+      // gameBoard.placeShip(ship1);
+      // gameBoard.placeShip(ship2);
+
+      //attacks missing
+      gameBoard.receiveAttack(0, 0);
+      gameBoard.receiveAttack(4, 4);
+      expect(gameBoard.board[0][0]).toEqual("O");
+      expect(gameBoard.board[4][4]).toEqual("O");
+
+      //attacks hitting
+      gameBoard.receiveAttack(1, 1);
+      gameBoard.receiveAttack(2, 3);
+      expect(gameBoard.board[1][1]).toEqual("X");
+      expect(gameBoard.board[2][3]).toEqual("X");
+      // console.log(ship2);
+      expect(gameBoard.ships[0].nHits).toBe(1);
+      expect(gameBoard.ships[1].nHits).toBe(1);
+    });
+
+    test("are all ships sunk", () => {
+      gameBoard.printBoard();
+      // console.log(gameBoard.ships[1]);
+
+      // ship2 expect one more hit to be sunk, so not all ships are sunk
+      expect(gameBoard.ships[0].sunk).toBeTruthy();
+      expect(gameBoard.ships[1].sunk).toBeFalsy();
+      expect(gameBoard.allShipsSunk()).toBeFalsy();
+
+      // ship2 take one more hit, now all ships are sunk
+      gameBoard.receiveAttack(2, 2);
+      expect(gameBoard.ships[1].sunk).toBeTruthy();
+      expect(gameBoard.allShipsSunk()).toBeTruthy();
+
+      gameBoard.printBoard();
+    });
   });
 });

@@ -23,7 +23,8 @@ Ship.prototype.getCoordinates = function () {
 };
 
 Ship.prototype.hit = function () {
-  this.nHits += 1;
+  this.nHits++;
+  this.isSunk();
 };
 
 Ship.prototype.isSunk = function () {
@@ -42,7 +43,7 @@ let Board = function (rows, cols) {
   this.cols = cols;
   this.board = this.initialiseBoard();
   this.ships = [];
-  this.missedShot = [];
+  this.missedShots = [];
 };
 
 Board.prototype.initialiseBoard = function () {
@@ -63,20 +64,34 @@ Board.prototype.placeShip = function (ship) {
   });
 };
 
-Board.prototype.receiveAttack = function (r, c) {};
+Board.prototype.receiveAttack = function (row, col) {
+  if (this.board[row][col] === EMPTY) {
+    this.missedShots.push({ row, col });
+    this.board[row][col] = MISS;
+    // console.log(this.missedShots);
+  } else if (this.board[row][col] === SHIP) {
+    const hitShip = this.ships.find((ship) =>
+      ship.coordinates.some((coord) => coord.row === row && coord.col === col)
+    );
+    hitShip.hit();
+    // console.log(this.ships);
+    this.board[row][col] = HIT;
+  }
+};
 
-// Board.prototype.printBoard = function () {
-//   for (let i = 0; i < this.rows; i++) {
-//     console.log(this.board[i].join(" "));
-//   }
-// };
+Board.prototype.printBoard = function () {
+  let boardString = "";
+  for (let i = 0; i < this.rows; i++) {
+    for (let j = 0; j < this.cols; j++) {
+      boardString += this.board[i][j] + " ";
+    }
+    boardString += "\n"; // Add a newline after each row
+  }
+  console.log(boardString);
+};
 
-// TODO:
-// actually write tests first before all of these (you are doing TDD!)
-// expand ship to include spanning coordinates, orientation
-// adjust hit for different coords?
-// then test
-// expand board to check if a placed ship is legal
-// then test
+Board.prototype.allShipsSunk = function () {
+  return this.ships.every((ship) => ship.sunk === true);
+};
 
 export { Ship, Board };

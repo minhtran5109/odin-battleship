@@ -94,4 +94,9 @@ Board.prototype.allShipsSunk = function () {
   return this.ships.every((ship) => ship.sunk === true);
 };
 
-export { Ship, Board };
+let Player = function (type, board) {
+  this.type = type;
+  this.board = board;
+};
+
+export { Ship, Board, Player };

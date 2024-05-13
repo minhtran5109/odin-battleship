@@ -1,10 +1,11 @@
-import { Board, Ship } from "./utils";
+import { Board, Ship, Player } from "./utils";
 // import { describe } from "node: test";
 
 let ship1;
 let ship2;
 let ship3;
 let gameBoard;
+let gameBoard2;
 const rows = 6;
 const cols = 6;
 
@@ -129,5 +130,20 @@ describe("Testing gameboard", () => {
 
       gameBoard.printBoard();
     });
+  });
+});
+
+describe("Testing player", () => {
+  test("Each player has their own board", () => {
+    gameBoard = new Board(rows, cols);
+    gameBoard2 = new Board(rows, cols);
+    const player1 = new Player("real", gameBoard);
+    const player2 = new Player("computer", gameBoard2);
+
+    player1.board.placeShip(ship2);
+    player2.board.placeShip(ship1);
+
+    expect(player1.board.ships).toContainEqual(ship2);
+    expect(player2.board.ships).toContainEqual(ship1);
   });
 });

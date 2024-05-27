@@ -68,7 +68,8 @@ Board.prototype.receiveAttack = function (row, col) {
   if (this.board[row][col] === EMPTY) {
     this.missedShots.push({ row, col });
     this.board[row][col] = MISS;
-    // console.log(this.missedShots);
+    console.log(`Miss at (${row}, ${col})`);
+    return true; // valid move
   } else if (this.board[row][col] === SHIP) {
     const hitShip = this.ships.find((ship) =>
       ship.coordinates.some((coord) => coord.row === row && coord.col === col)
@@ -76,6 +77,11 @@ Board.prototype.receiveAttack = function (row, col) {
     hitShip.hit();
     // console.log(this.ships);
     this.board[row][col] = HIT;
+    console.log(`Hit at (${row}, ${col})`);
+    return true; // valid move
+  } else {
+    console.log(`Already attacked at (${row}, ${col})`);
+    return false; // invalid move
   }
 };
 
@@ -96,7 +102,12 @@ Board.prototype.allShipsSunk = function () {
 
 let Player = function (type, board) {
   this.type = type;
-  this.board = board;
+  this.gameBoard = board;
+};
+
+Player.prototype.attack = function (opponent, row, col) {
+  const isValidMove = opponent.gameBoard.receiveAttack(row, col);
+  return isValidMove;
 };
 
 export { Ship, Board, Player };

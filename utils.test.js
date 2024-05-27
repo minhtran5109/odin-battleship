@@ -140,10 +140,10 @@ describe("Testing player", () => {
     const player1 = new Player("real", gameBoard);
     const player2 = new Player("computer", gameBoard2);
 
-    player1.board.placeShip(ship2);
-    player2.board.placeShip(ship1);
+    player1.gameBoard.placeShip(ship2);
+    player2.gameBoard.placeShip(ship1);
 
-    expect(player1.board.ships).toContainEqual(ship2);
-    expect(player2.board.ships).toContainEqual(ship1);
+    expect(player1.gameBoard.ships).toContainEqual(ship2);
+    expect(player2.gameBoard.ships).toContainEqual(ship1);
   });
 });

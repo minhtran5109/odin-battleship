@@ -4,22 +4,6 @@ import "./style.css";
 
 const BOARD_SIZE = 10;
 
-// function createBoard(size) {
-//   const boardElement = document.getElementById("gameBoard");
-//   for (let row = 0; row < size; row++) {
-//     for (let col = 0; col < size; col++) {
-//       const cell = document.createElement("div");
-//       cell.classList.add("cell");
-//       cell.dataset.row = row;
-//       cell.dataset.col = col;
-//       cell.textContent = ""; // Optional: You can add text inside the cell
-//       boardElement.appendChild(cell);
-//     }
-//   }
-// }
-
-// createBoard(BOARD_SIZE);
-
 const board1 = new Board(BOARD_SIZE, BOARD_SIZE);
 const board2 = new Board(BOARD_SIZE, BOARD_SIZE);
 
@@ -36,3 +20,40 @@ comp.gameBoard.placeShip(ship3);
 
 Renderer.renderBoard(player.gameBoard.board, "playerBoard");
 Renderer.renderBoard(comp.gameBoard.board, "computerBoard");
+
+let currentPlayer = player;
+let opponentPlayer = comp;
+
+function switchTurns() {
+  currentPlayer = currentPlayer === player ? comp : player;
+  opponentPlayer = opponentPlayer === player ? comp : player;
+}
+
+function handleAttack(event, boardElementId) {
+  if (event.target.classList.contains("cell")) {
+    const cellIndex = Array.from(event.target.parentNode.children).indexOf(
+      event.target
+    );
+    const row = Math.floor(cellIndex / BOARD_SIZE);
+    const col = cellIndex % BOARD_SIZE;
+    // console.log(row, col);
+
+    const isValidMove = currentPlayer.attack(opponentPlayer, row, col);
+
+    if (isValidMove) {
+      console.log(
+        `${
+          currentPlayer.type === "real" ? "Player 1" : "Computer"
+        } attacked position (${row}, ${col})`
+      );
+    } else {
+      console.log("Invalid move, try again.");
+    }
+  }
+}
+
+document.getElementById("computerBoard").addEventListener("click", (event) => {
+  if (currentPlayer === player) {
+    handleAttack(event, "computerBoard");
+  }
+});

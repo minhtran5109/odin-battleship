@@ -46,14 +46,24 @@ function handleAttack(event, boardElementId) {
           currentPlayer.type === "real" ? "Player 1" : "Computer"
         } attacked position (${row}, ${col})`
       );
+      switchTurns();
     } else {
       console.log("Invalid move, try again.");
     }
   }
 }
+// TODO
+// render board after attack
+// do switch turns
 
 document.getElementById("computerBoard").addEventListener("click", (event) => {
   if (currentPlayer === player) {
     handleAttack(event, "computerBoard");
+  }
+});
+
+document.getElementById("playerBoard").addEventListener("click", (event) => {
+  if (currentPlayer === comp) {
+    handleAttack(event, "playerBoard");
   }
 });

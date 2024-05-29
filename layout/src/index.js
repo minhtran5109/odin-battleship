@@ -23,10 +23,18 @@ Renderer.renderBoard(comp.gameBoard.board, "computerBoard");
 
 let currentPlayer = player;
 let opponentPlayer = comp;
+// Renderer.renderBoard(
+//   opponentPlayer.gameBoard.board,
+//   opponentPlayer === player ? "playerBoard" : "computerBoard"
+// );
 
 function switchTurns() {
   currentPlayer = currentPlayer === player ? comp : player;
   opponentPlayer = opponentPlayer === player ? comp : player;
+  Renderer.renderBoard(
+    opponentPlayer.gameBoard.board,
+    opponentPlayer === player ? "playerBoard" : "computerBoard"
+  );
 }
 
 function handleAttack(event, boardElementId) {
@@ -46,6 +54,7 @@ function handleAttack(event, boardElementId) {
           currentPlayer.type === "real" ? "Player 1" : "Computer"
         } attacked position (${row}, ${col})`
       );
+      Renderer.renderBoard(opponentPlayer.gameBoard.board, boardElementId);
       switchTurns();
     } else {
       console.log("Invalid move, try again.");

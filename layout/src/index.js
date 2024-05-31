@@ -1,4 +1,4 @@
-import { Board, Ship, Player } from "../../utils.js";
+import { Board, Ship, Player, ComputerPlayer } from "../../utils.js";
 import { Renderer } from "./render.js";
 import "./style.css";
 
@@ -8,7 +8,7 @@ const board1 = new Board(BOARD_SIZE, BOARD_SIZE);
 const board2 = new Board(BOARD_SIZE, BOARD_SIZE);
 
 const player = new Player("real", board1);
-const comp = new Player("computer", board2);
+const comp = new ComputerPlayer(board2);
 
 // Predetermined ship placements for demonstration
 const ship1 = new Ship(3, "H", 1, 1);
@@ -56,14 +56,21 @@ function handleAttack(event, boardElementId) {
       );
       Renderer.renderBoard(opponentPlayer.gameBoard.board, boardElementId);
       switchTurns();
+
+      if (currentPlayer.type === "computer") {
+        setTimeout(() => {
+          currentPlayer.makeRandomMove(opponentPlayer);
+          Renderer.renderBoard(opponentPlayer.gameBoard.board, "playerBoard");
+          switchTurns();
+        }, 1000);
+      }
     } else {
       console.log("Invalid move, try again.");
     }
   }
 }
 // TODO
-// render board after attack
-// do switch turns
+// add computer move
 
 document.getElementById("computerBoard").addEventListener("click", (event) => {
   if (currentPlayer === player) {
@@ -71,8 +78,8 @@ document.getElementById("computerBoard").addEventListener("click", (event) => {
   }
 });
 
-document.getElementById("playerBoard").addEventListener("click", (event) => {
-  if (currentPlayer === comp) {
-    handleAttack(event, "playerBoard");
-  }
-});
+// document.getElementById("playerBoard").addEventListener("click", (event) => {
+//   if (currentPlayer === comp) {
+//     handleAttack(event, "playerBoard");
+//   }
+// });

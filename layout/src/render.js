@@ -17,4 +17,9 @@ export class Renderer {
       }
     }
   }
+
+  static displayMessage(message) {
+    const messageElement = document.getElementById("message");
+    messageElement.textContent = message;
+  }
 }

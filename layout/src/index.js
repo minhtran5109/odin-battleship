@@ -27,6 +27,7 @@ let opponentPlayer = comp;
 //   opponentPlayer.gameBoard.board,
 //   opponentPlayer === player ? "playerBoard" : "computerBoard"
 // );
+let gameEnded = false; // Variable to track if the game has ended
 
 function switchTurns() {
   currentPlayer = currentPlayer === player ? comp : player;
@@ -37,14 +38,27 @@ function switchTurns() {
   );
 }
 
-function handleAttack(event, boardElementId) {
+function removeEventListener(id) {
+  document.getElementById(id).removeEventListener("click", handleAttack);
+}
+
+function checkGameOver() {
+  if (opponentPlayer.gameBoard.allShipsSunk()) {
+    gameEnded = true;
+    Renderer.displayMessage(
+      `${currentPlayer.type === "real" ? "Player 1" : "Computer"} wins!`
+    );
+    removeEventListener("computerBoard");
+  }
+}
+
+function handleAttack(event) {
   if (event.target.classList.contains("cell")) {
     const cellIndex = Array.from(event.target.parentNode.children).indexOf(
       event.target
     );
     const row = Math.floor(cellIndex / BOARD_SIZE);
     const col = cellIndex % BOARD_SIZE;
-    // console.log(row, col);
 
     const isValidMove = currentPlayer.attack(opponentPlayer, row, col);
 
@@ -54,29 +68,32 @@ function handleAttack(event, boardElementId) {
           currentPlayer.type === "real" ? "Player 1" : "Computer"
         } attacked position (${row}, ${col})`
       );
-      Renderer.renderBoard(opponentPlayer.gameBoard.board, boardElementId);
-      switchTurns();
 
-      if (currentPlayer.type === "computer") {
-        setTimeout(() => {
-          currentPlayer.makeRandomMove(opponentPlayer);
-          Renderer.renderBoard(opponentPlayer.gameBoard.board, "playerBoard");
-          switchTurns();
-        }, 1000);
+      Renderer.renderBoard(opponentPlayer.gameBoard.board, "computerBoard");
+      checkGameOver();
+
+      if (!gameEnded) {
+        switchTurns();
+        if (currentPlayer.type === "computer") {
+          setTimeout(() => {
+            currentPlayer.makeRandomMove(opponentPlayer);
+            Renderer.renderBoard(opponentPlayer.gameBoard.board, "playerBoard");
+            checkGameOver();
+            if (!gameEnded) {
+              switchTurns();
+            }
+          }, 1000);
+        }
       }
     } else {
       console.log("Invalid move, try again.");
     }
   }
 }
-// TODO
-// add computer move
 
-document.getElementById("computerBoard").addEventListener("click", (event) => {
-  if (currentPlayer === player) {
-    handleAttack(event, "computerBoard");
-  }
-});
+document
+  .getElementById("computerBoard")
+  .addEventListener("click", handleAttack);
 
 // document.getElementById("playerBoard").addEventListener("click", (event) => {
 //   if (currentPlayer === comp) {

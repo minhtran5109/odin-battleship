@@ -27,3 +27,10 @@
 .miss {
     background-color: white;
 }
+
+.message {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 20px;
+  color: green;
+}

@@ -110,4 +110,21 @@ Player.prototype.attack = function (opponent, row, col) {
   return isValidMove;
 };
 
-export { Ship, Board, Player };
+class ComputerPlayer extends Player {
+  constructor(board) {
+    super("computer", board);
+  }
+  makeRandomMove(opponent, opponentBoardId) {
+    let row, col, isValidMove;
+
+    do {
+      row = Math.floor(Math.random() * opponent.gameBoard.rows);
+      col = Math.floor(Math.random() * opponent.gameBoard.cols);
+      isValidMove = opponent.gameBoard.receiveAttack(row, col);
+    } while (!isValidMove);
+
+    console.log(`Computer attacked position (${row}, ${col})`);
+  }
+}
+
+export { Ship, Board, Player, ComputerPlayer };

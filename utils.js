@@ -58,10 +58,15 @@ Board.prototype.initialiseBoard = function () {
 };
 
 Board.prototype.placeShip = function (ship) {
-  this.ships.push(ship);
-  ship.coordinates.forEach((coord) => {
-    this.board[coord.row][coord.col] = SHIP;
-  });
+  if (this.placementsValid(ship)) {
+    this.ships.push(ship);
+    ship.coordinates.forEach((coord) => {
+      this.board[coord.row][coord.col] = SHIP;
+    });
+    return true;
+  } else {
+    return false;
+  }
 };
 
 Board.prototype.receiveAttack = function (row, col) {
@@ -98,6 +103,17 @@ Board.prototype.printBoard = function () {
 
 Board.prototype.allShipsSunk = function () {
   return this.ships.every((ship) => ship.sunk === true);
+};
+
+Board.prototype.placementsValid = function (ship) {
+  return ship.coordinates.every(
+    (coord) =>
+      coord.row >= 0 &&
+      coord.row < this.rows &&
+      coord.col >= 0 &&
+      coord.col < this.cols &&
+      this.board[coord.row][coord.col] === EMPTY
+  );
 };
 
 let Player = function (type, board) {

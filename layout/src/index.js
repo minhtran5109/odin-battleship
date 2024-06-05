@@ -14,8 +14,8 @@ const comp = new ComputerPlayer(board2);
 const ship1 = new Ship(3, "H", 1, 1);
 const ship2 = new Ship(4, "V", 3, 3);
 const ship3 = new Ship(2, "H", 5, 5);
-player.gameBoard.placeShip(ship2);
-player.gameBoard.placeShip(ship1);
+comp.gameBoard.placeShip(ship2);
+comp.gameBoard.placeShip(ship1);
 comp.gameBoard.placeShip(ship3);
 
 Renderer.renderBoard(player.gameBoard.board, "playerBoard");
@@ -100,3 +100,31 @@ document
 //     handleAttack(event, "playerBoard");
 //   }
 // });
+
+document.getElementById("placeShipButton").addEventListener("click", () => {
+  const length = parseInt(document.getElementById("shipLength").value);
+  const orientation = document.getElementById("orientation").value;
+  const startRow = parseInt(document.getElementById("startRow").value);
+  const startCol = parseInt(document.getElementById("startCol").value);
+
+  const newShip = new Ship(length, orientation, startRow, startCol);
+  // console.log(newShip);
+  const doPlaceShip = player.gameBoard.placeShip(newShip);
+  // console.log(player.gameBoard.printBoard());
+  if (doPlaceShip) {
+    console.log("yes");
+    // console.log(player.gameBoard.printBoard());
+    Renderer.renderBoard(player.gameBoard.board, "playerBoard");
+  } else {
+    console.log("no");
+    Renderer.displayMessage("Invalid ship placement. Try again.");
+  }
+});
+
+// TODO
+// random ship placements
+// limit number of ships placed
+// switch screen play
+
+// Ideally for OO these gameplay logic could be methods from a class itself
+// as well

@@ -57,6 +57,12 @@ Board.prototype.initialiseBoard = function () {
   return board;
 };
 
+Board.prototype.resetBoard = function () {
+  this.board = this.initialiseBoard();
+  this.ships = [];
+  this.missedShots = [];
+};
+
 Board.prototype.placeShip = function (ship) {
   if (this.placementsValid(ship)) {
     this.ships.push(ship);

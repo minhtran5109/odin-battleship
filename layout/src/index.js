@@ -121,6 +121,25 @@ document.getElementById("placeShipButton").addEventListener("click", () => {
   }
 });
 
+document
+  .getElementById("randomPlacementButton")
+  .addEventListener("click", () => {
+    player.gameBoard.resetBoard();
+
+    const lengths = [4, 3, 2];
+    lengths.forEach((length) => {
+      let shipPlaced = false;
+      while (!shipPlaced) {
+        const orientation = Math.random() < 0.5 ? "H" : "V";
+        const startRow = Math.floor(Math.random() * BOARD_SIZE);
+        const startCol = Math.floor(Math.random() * BOARD_SIZE);
+        const newShip = new Ship(length, orientation, startRow, startCol);
+        shipPlaced = player.gameBoard.placeShip(newShip);
+      }
+    });
+    Renderer.renderBoard(player.gameBoard.board, "playerBoard");
+  });
+
 // TODO
 // random ship placements
 // limit number of ships placed

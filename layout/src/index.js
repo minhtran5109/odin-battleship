@@ -19,7 +19,7 @@ comp.gameBoard.placeShip(ship1);
 comp.gameBoard.placeShip(ship3);
 
 Renderer.renderBoard(player.gameBoard.board, "playerBoard");
-Renderer.renderBoard(comp.gameBoard.board, "computerBoard");
+Renderer.renderBoard(comp.gameBoard.board, "computerBoard", true);
 
 let currentPlayer = player;
 let opponentPlayer = comp;
@@ -32,9 +32,12 @@ let gameEnded = false; // Variable to track if the game has ended
 function switchTurns() {
   currentPlayer = currentPlayer === player ? comp : player;
   opponentPlayer = opponentPlayer === player ? comp : player;
-  Renderer.renderBoard(
-    opponentPlayer.gameBoard.board,
-    opponentPlayer === player ? "playerBoard" : "computerBoard"
+  // Renderer.renderBoard(
+  //   opponentPlayer.gameBoard.board,
+  //   opponentPlayer === player ? "playerBoard" : "computerBoard"
+  // );
+  Renderer.displayMessage(
+    `It's ${currentPlayer.type === "real" ? "your" : "computer's"} turn.`
   );
 }
 
@@ -69,21 +72,30 @@ function handleAttack(event) {
         } attacked position (${row}, ${col})`
       );
 
-      Renderer.renderBoard(opponentPlayer.gameBoard.board, "computerBoard");
+      Renderer.renderBoard(
+        opponentPlayer.gameBoard.board,
+        "computerBoard",
+        true
+      );
       checkGameOver();
 
       if (!gameEnded) {
-        switchTurns();
-        if (currentPlayer.type === "computer") {
-          setTimeout(() => {
-            currentPlayer.makeRandomMove(opponentPlayer);
-            Renderer.renderBoard(opponentPlayer.gameBoard.board, "playerBoard");
-            checkGameOver();
-            if (!gameEnded) {
-              switchTurns();
-            }
-          }, 1000);
-        }
+        setTimeout(() => {
+          switchTurns();
+          if (currentPlayer.type === "computer") {
+            setTimeout(() => {
+              currentPlayer.makeRandomMove(opponentPlayer);
+              Renderer.renderBoard(
+                opponentPlayer.gameBoard.board,
+                "playerBoard"
+              );
+              checkGameOver();
+              if (!gameEnded) {
+                setTimeout(() => switchTurns(), 1000); //
+              }
+            }, 1000);
+          }
+        }, 1000);
       }
     } else {
       console.log("Invalid move, try again.");
